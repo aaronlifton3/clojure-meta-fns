@@ -45,5 +45,21 @@
 (doseq [[k,v] {"loop-test" 4 "factorial" 4}]
   (prn (#((resolve (symbol k)) v))))
 
+(defmacro assert-equals [actual expected]
+    `(let [~'actual-value ~actual]
+        (when-not (= ~'actual-value ~expected)
+            (throw
+                (AssertionError.
+                   (str "Expected '" '~actual "' to be " ~expected " but was " ~'actual-value))))
+        (when (= ~'actual-value ~expected)
+            (str "True: '" '~actual "' => '" ~'actual-value "' = '" ~expected "'"))))
+
+; Test assert-equals macro
+(macroexpand-1 '(assert-equals (inc 5) 5))
+(assert-equals (inc 5) 5)
+(assert-equals (inc 5) 6)
+
+
+(prn (assert-equals 1 1))
 ;(apply (loop-test)
 ;(factorial 4)
